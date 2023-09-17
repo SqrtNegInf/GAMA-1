@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+#u# https://rosettacode.org/wiki/Countdown
+#c# 2023-09-12 
+
+
+best = 0
+best_out = ""
+target = 952
+nbrs = [100, 75, 50, 25, 6, 3]
+
+def sol(target, nbrs, out=""):
+    global best, best_out
+    if abs(target - best) > abs(target - nbrs[0]): 
+        best = nbrs[0]
+        best_out = out
+    if target == nbrs[0]:
+        print(out)
+    elif len(nbrs) > 1:
+        for i1 in range(0, len(nbrs)-1):
+            for i2 in range(i1+1, len(nbrs)):
+                remains = nbrs[:i1] + nbrs[i1+1:i2] + nbrs[i2+1:]
+                a, b = nbrs[i1], nbrs[i2]
+                if a > b: a, b = b, a
+                res = b + a
+                op = str(b) + " + " + str(a) + " = " + str(res) + " ; "
+                sol(target, [res] + remains, out + op)
+                if b != a:
+                    res = b - a
+                    op = str(b) + " - " + str(a) + " = " + str(res) + " ; "
+                    sol(target, [res] + remains, out + op)
+                if a != 1:
+                    res = b * a
+                    op = str(b) + " * " + str(a) + " = " + str(res) + " ; "
+                    sol(target, [res] + remains, out + op)
+                    if b % a == 0:
+                        res = int(b / a)
+                        op = str(b) + " / " + str(a) + " = " + str(res) + " ; "
+                        sol(target, [res] + remains, out + op)
+
+sol(target, nbrs)
+if best != target: 
+    print("Best solution " + str(best))
+    print(best_out)
+
+"""
+Output:
+100 + 6 = 106 ; 106 * 75 = 7950 ; 7950 * 3 = 23850 ; 23850 - 50 = 23800 ; 23800 / 25 = 952 ; 
+100 + 6 = 106 ; 106 * 3 = 318 ; 318 * 75 = 23850 ; 23850 - 50 = 23800 ; 23800 / 25 = 952 ; 
+100 + 6 = 106 ; 75 * 3 = 225 ; 225 * 106 = 23850 ; 23850 - 50 = 23800 ; 23800 / 25 = 952 ; 
+100 + 3 = 103 ; 103 * 75 = 7725 ; 7725 * 6 = 46350 ; 46350 / 50 = 927 ; 927 + 25 = 952 ; 
+100 + 3 = 103 ; 103 * 6 = 618 ; 618 * 75 = 46350 ; 46350 / 50 = 927 ; 927 + 25 = 952 ; 
+100 + 3 = 103 ; 75 * 6 = 450 ; 450 * 103 = 46350 ; 46350 / 50 = 927 ; 927 + 25 = 952 ; 
+100 + 3 = 103 ; 75 * 6 = 450 ; 450 / 50 = 9 ; 103 * 9 = 927 ; 927 + 25 = 952 ; 
+75 * 6 = 450 ; 450 / 50 = 9 ; 100 + 3 = 103 ; 103 * 9 = 927 ; 927 + 25 = 952 ; 
+75 * 6 = 450 ; 100 + 3 = 103 ; 450 * 103 = 46350 ; 46350 / 50 = 927 ; 927 + 25 = 952 ; 
+75 * 6 = 450 ; 100 + 3 = 103 ; 450 / 50 = 9 ; 103 * 9 = 927 ; 927 + 25 = 952 ; 
+75 * 3 = 225 ; 100 + 6 = 106 ; 225 * 106 = 23850 ; 23850 - 50 = 23800 ; 23800 / 25 = 952 ; 
+
+
+"""

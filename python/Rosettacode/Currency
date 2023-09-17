@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+#u# https://rosettacode.org/wiki/Currency
+#c# 2023-09-12 <RC
+#p# OK
+
+#This uses Pythons decimal module, 
+#(and some copying of names from the Raku example).
+
+from decimal import Decimal # as D
+from collections import namedtuple
+
+Item = namedtuple('Item', 'price, quant')
+
+items = dict( hamburger=Item(Decimal('5.50'), Decimal('4000000000000000')),
+              milkshake=Item(Decimal('2.86'), Decimal('2')) )
+tax_rate = Decimal('0.0765')
+
+fmt = "%-10s %8s %18s%23s"
+print(fmt % tuple('Item Price Quantity Extension'.split()))
+#print(fmt % tuple('Item Price Quantity Extension'.upper().split()))
+
+total_before_tax = 0
+for item, (price, quant) in sorted(items.items()):
+    ext = price * quant
+    print(fmt % (item, price, quant, ext))
+    total_before_tax += ext
+print(fmt % ('', '', '', '--------------------'))
+print(fmt % ('', '', 'subtotal', total_before_tax))
+
+tax = (tax_rate * total_before_tax).quantize(Decimal('0.00'))
+print(fmt % ('', '', 'Tax', tax))
+
+total = total_before_tax + tax
+print(fmt % ('', '', '', '--------------------'))
+print(fmt % ('', '', 'Total', total))
+
+
+#ITEM          PRICE           QUANTITY              EXTENSION
+#hamburger      5.50   4000000000000000   22000000000000000.00
+#milkshake      2.86                  2                   5.72
+#                                         --------------------
+#                              subtotal   22000000000000005.72
+#                                   Tax    1683000000000000.44
+#                                         --------------------
+#                                 Total   23683000000000006.16
