@@ -1,0 +1,14 @@
+#!/usr/local/bin/perl
+## xxx
+#  David H.  2022-08-11
+
+use Statistics::R::IO;
+ 
+#my $var = Statistics::R::IO::readRDS('data.rds');
+#print $var->to_pl;
+ 
+my %r_workspace = Statistics::R::IO::readRData('.RData');
+while (my ($var_name, $value) = each %r_workspace) {
+    print "n:$var_name v:$value\n";
+    print "--\n";
+}
