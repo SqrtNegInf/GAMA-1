@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+## xxx
+#    2023-09-17
+
+#from concurrent import futures
+from math import floor, sqrt
+
+NUMBERS  = [64921987050997300559,  70251412046988563035,  71774104902986066597,
+           83448083465633593921,  84209429893632345702,  87001033462961102237,
+           87762379890959854011,  89538854889623608177,  98421229882942378967,
+           259826672618677756753, 262872058330672763871, 267440136898665274575,
+           278352769033314050117, 281398154745309057242, 292057004737291582187]
+
+def lowest_factor(n, _start=3):
+    if n % 2 == 0:
+        return 2
+    search_max = int(floor(sqrt(n))) + 1
+    for i in range(_start, search_max, 2):
+        if n % i == 0:
+            return i
+    return n
+
+def prime_factors(n, lowest):
+    pf = []
+    while n > 1:
+        pf.append(lowest)
+        n //= lowest
+        lowest = lowest_factor(n, max(lowest, 3))
+    return pf
+
+def prime_factors_of_number_with_lowest_prime_factor(NUMBERS):
+#    with futures.ProcessPoolExecutor() as executor:
+#       low_factor, number = max( (l, f) for l, f in zip(executor.map(lowest_factor, NUMBERS), NUMBERS) )
+        low_factor, number = max( (l, f) for l, f in zip(map(lowest_factor, NUMBERS), NUMBERS) )
+        all_factors = prime_factors(number, low_factor)
+        return number, all_factors
+
+ 
+def main():
+    print('For these numbers:')
+    print('\n  '.join(str(p) for p in NUMBERS))
+    number, all_factors = prime_factors_of_number_with_lowest_prime_factor(NUMBERS)
+    print('    The one with the largest minimum prime factor is {}:'.format(number))
+    print('      All its prime factors in order are: {}'.format(all_factors))
+ 
+if __name__ == '__main__':
+    main()
