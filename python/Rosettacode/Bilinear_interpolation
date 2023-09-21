@@ -2,6 +2,8 @@
 #u# https://rosettacode.org/wiki/Bilinear_interpolation
 #c# 2023-09-20 
 
+## DH  can't get 'imread' installed:
+##  AttributeError: 'dict' object has no attribute '__NUMPY_SETUP__'
 
 # Of course, it is much faster to use PIL, Pillow or SciPy to resize an image than to rely on this code.
 
