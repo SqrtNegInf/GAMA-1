@@ -1,5 +1,15 @@
+2023-09-22
+Doodle with 'valgrind' (Ubuntu, no dice on macOS)
+
+2023-09-21
+More numpy/scipy
+Hit some dead-ends on package installation...
+
 2023-09-19
 Looking at numpy/scipy tasks
+
+2023-09-18
+Port some Python to Perl (list slices are an interesting difference)
 
 2023-09-17
 Getting more familiar with the Python debugger.
@@ -7,6 +17,9 @@ Getting more familiar with the Python debugger.
 2023-09-16
 First push to github
 Sequester RC stuff
+
+2023-09-15
+'dq-fun' the best way to get the Fortran quad precision for Ramanujan's?
 
 2023-09-14
 Gather code into a single repo.
