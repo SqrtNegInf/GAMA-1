@@ -27,7 +27,7 @@ system "mv $f $f.1"
 
 $w =~ s/'/\\'/g;
 
-my $fortran = `curl -s -o - 'https://www.rosettacode.org/wiki/$w' | tee _download.html | perl -0 -npe 's/^.*id="Fortran".(.*?)<h2>.*/\$1/s; s/&#160;/ /sg;s#<br */>#<br/>\\n#sg' | strip-html - `;
+my $fortran = `curl -s -o - 'https://rosettacode.org/wiki/$w' | tee _download.html | perl -0 -npe 's/^.*id="Fortran".(.*?)<h2>.*/\$1/s; s/&#160;/ /sg;s#<br */>#<br/>\\n#sg' | strip-html - `;
 die "No text!" if $fortran =~ /currently no text/i;
 
 $fortran =~ s/^Fortran\s*\[edit\]//;
@@ -48,4 +48,4 @@ $fortran
 
 EOP
 
-system "chmod +x $f";
+#system "chmod +x $f.f90";
