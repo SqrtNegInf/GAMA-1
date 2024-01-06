@@ -9,7 +9,8 @@
 
 	!the dictionary file:
 	integer,parameter :: file_unit = 1000
-	character(len=*),parameter :: filename = 'unixdict.txt'
+    character(len=*),parameter :: filename = 'anagram.txt'
+!   character(len=*),parameter :: filename = 'unixdict.txt'
 
 	!maximum number of characters in a word:
 	integer,parameter :: max_chars = 50
