@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+#u# https://rosettacode.org/wiki/Euler%27s_constant_0.5772...
+#c# 2023-09-20 
+
+
+# /**************************************************
+# Subject: Computation of Euler's constant 0.5772...
+#          with Euler's Zeta Series.
+# tested : Python 3.11 
+# -------------------------------------------------*/
+
+from scipy import special as s
+
+def eulers_constant(n):
+    k = 2
+    euler = 0
+    while k <= n:
+        euler += (s.zeta(k) - 1)/k
+        k += 1
+    return 1 - euler
+
+print(eulers_constant(47))
+
+#Output:
+#0.577215664901533
