@@ -11,7 +11,7 @@ program pick_random
   real :: r
   
 ! j = 47;
-! call random_init(.true., .true.)
+! call random_init(.true., .true.) !! not with older 'gofortran'
 
   call random_number(r)
   write(*,*) r
