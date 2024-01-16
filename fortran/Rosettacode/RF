@@ -3,4 +3,5 @@ use v5.36;
 
 my $task = shift || die;
 $task =~ s/.f90//;
-exec "gfortran -Wall -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+exec "gfortran -Wall -Wno-uninitialized -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+#exec "gfortran -Wall -o $task $task.f90; ./$task; rm -f ./$task *.mod";
