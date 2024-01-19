@@ -1,12 +1,17 @@
 program ramanujans_constant
 implicit none 
 
-integer, parameter :: p = 16
-real (kind=p) :: ppi
+! standard
+!integer, parameter :: p = 16
 
-! equivalent to above
-!integer, parameter :: p = selected_real_kind(33, 4931)
-!real (kind=p) :: ppi
+! does not suffice [to try, put above  'implicit']
+use, intrinsic :: iso_fortran_env, only : p => real128
+
+!integer, parameter :: p = selected_real_kind(33, 4931)  ! 128-bit reals [works]
+!integer, parameter :: p = selected_real_kind(15,  307)  !  64-bit reals [fails]
+!integer, parameter :: p = selected_real_kind(19)        ! minimum required?
+
+real (kind=p) :: ppi
 
 ppi = 4*atan(1._p)
 print *, ppi
