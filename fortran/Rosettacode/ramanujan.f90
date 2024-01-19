@@ -4,7 +4,7 @@ implicit none
 ! standard
 !integer, parameter :: p = 16
 
-! does not suffice [to try, put above  'implicit']
+! alternate, to try, put above  'implicit' (but does not work with older gfortran)
 use, intrinsic :: iso_fortran_env, only : p => real128
 
 !integer, parameter :: p = selected_real_kind(33, 4931)  ! 128-bit reals [works]
