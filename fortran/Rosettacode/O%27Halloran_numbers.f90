@@ -26,9 +26,9 @@ program ohalloran_numbers
     ! Print the O'Halloran numbers
     print *, "Even surface areas < NOT ", max_area, " achievable by any regular integer-valued cuboid:"
     do i = 1, max_area
-    	if (mod(i, 2) == 0 .AND. areas(i)) then
-        	write(*,'(I4,1X)', advance='no') i
-    	endif
+        if (mod(i, 2) == 0 .AND. areas(i)) then
+            write(*,'(I4,1X)', advance='no') i
+        endif
      end do
      print *, "" ! To add a final newline after the list
 end program ohalloran_numbers
