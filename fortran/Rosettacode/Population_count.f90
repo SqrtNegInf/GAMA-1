@@ -15,22 +15,22 @@ program population_count
 
   x = 1
   write(*, "(a8)", advance = "no") "3**i :"
-  do i = 1, 30
+  a: do i = 1, 30
     write(*, "(i3)", advance = "no") pop_cnt(x)
     x = x * 3
-  end do
+  end do a
 
   write(*,*)
   write(*, "(a8)", advance = "no") "Evil :"
   n = 0
   x = 0 
-  do while(n < 30)
+  b: do while(n < 30)
     if(mod(pop_cnt(x), 2) == 0) then
       n = n + 1
       write(*, "(i3)", advance = "no") x
     end if
     x = x + 1
-  end do
+  end do b
 
   write(*,*)
   write(*, "(a8)", advance = "no") "Odious :"
@@ -44,6 +44,41 @@ program population_count
     x = x + 1
   end do
 
+  write (*,*)
+  write (*,'(a)') '========== do it again, with intrinsic =========='
+
+  x = 1
+  write(*, "(a8)", advance = "no") "3**i :"
+  do i = 1, 30
+    write(*, "(i3)", advance = "no") popcnt(x)
+    x = x * 3
+  end do
+
+  write(*,*)
+  write(*, "(a8)", advance = "no") "Evil :"
+  n = 0
+  x = 0 
+  do while(n < 30)
+    if(mod(popcnt(x), 2) == 0) then
+      n = n + 1
+      write(*, "(i3)", advance = "no") x
+    end if
+    x = x + 1
+  end do
+
+  write(*,*)
+  write(*, "(a8)", advance = "no") "Odious :"
+  n = 0
+  x = 0 
+  do while(n < 30)
+    if(mod(popcnt(x), 2) /= 0) then
+      n = n + 1
+      write(*, "(i3)", advance = "no") x
+    end if
+    x = x + 1
+  end do
+  write (*,*)
+
 contains
 
 integer function pop_cnt(x)
@@ -51,9 +86,9 @@ integer function pop_cnt(x)
   integer :: i
 
   pop_cnt = 0
-  do i = 0, 63
+  a:  do i = 0, 63
     if(btest(x, i)) pop_cnt = pop_cnt + 1
-  end do
+  end do a
 
 end function
 end program
