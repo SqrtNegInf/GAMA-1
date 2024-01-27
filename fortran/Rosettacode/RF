@@ -4,8 +4,8 @@ my $task = shift || die;
 $task =~ s/.f90//;
 
 #exec "gfortran -Wall -Wextra -Wno-uninitialized -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
-#exec "flang-new-mp-17 -Werror                   -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+ exec "flang-new-mp-17 -Werror                   -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
 
-#__END__
+__END__
 system "gfortran -Wall -Wextra -Wno-uninitialized -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
 system "flang-new-mp-17 -Werror                   -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
