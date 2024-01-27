@@ -16,12 +16,12 @@ program queens
     implicit none
     integer, parameter :: long = selected_int_kind(17)
     integer, parameter :: l = 18
-    integer, parameter :: nthreads = 16    ! Change to suit your processor
+    integer, parameter :: nthreads = 32    ! Change to suit your processor
     integer :: n, i, j, a(l*l, 2), k, p, q
     integer(long) :: s, b(l*l)
     real(kind(1d0)) :: t1, t2
 ! Edit : Added OPEN MP calls to set number of threads
-    CALL OMP_SET_DYNAMIC(.TRUE.)
+!   CALL OMP_SET_DYNAMIC(.TRUE.)
     CALL OMP_SET_NUM_THREADS(nthreads)
     do n = 6, l
         k = 0
