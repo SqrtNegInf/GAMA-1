@@ -1,0 +1,815 @@
+!   Fortran
+!u# https://rosettacode.org/wiki/N-queens_problem
+!c# 2024-01-27 
+
+Fortran
+Works with: Fortran version 95 and later
+Using a back tracking method to find one solution
+
+program Nqueens
+  implicit none
+
+  integer, parameter :: n = 8  ! size of board
+  integer :: file = 1, rank = 1, queens = 0
+  integer :: i
+  logical :: board(n,n) = .false.
+
+  do while (queens < n)
+    board(file, rank) = .true.
+    if(is_safe(board, file, rank)) then
+      queens = queens + 1
+      file = 1
+      rank = rank + 1
+    else
+      board(file, rank) = .false.
+      file = file + 1
+      do while(file > n)
+         rank = rank - 1
+         if (rank < 1) then
+           write(*, "(a,i0)") "No solution for n = ", n
+           stop
+         end if  
+         do i = 1, n
+           if (board(i, rank)) then
+             file = i
+             board(file, rank) = .false.
+             queens = queens - 1
+             file = i + 1
+             exit
+           end if
+         end do
+       end do
+    end if
+  end do
+
+  call Printboard(board)
+
+contains
+
+function is_safe(board, file, rank)
+  logical :: is_safe
+  logical, intent(in) :: board(:,:)
+  integer, intent(in) :: file, rank
+  integer :: i, f, r
+
+  is_safe = .true.
+  do i = rank-1, 1, -1
+    if(board(file, i)) then
+      is_safe = .false.
+      return
+    end if
+  end do
+
+  f = file - 1
+  r = rank - 1
+  do while(f > 0 .and. r > 0)
+    if(board(f, r)) then
+      is_safe = .false.
+      return
+    end if
+    f = f - 1
+    r = r - 1
+  end do
+
+  f = file + 1
+  r = rank - 1
+  do while(f <= n .and. r > 0)
+    if(board(f, r)) then
+      is_safe = .false.
+      return
+    end if
+    f = f + 1
+    r = r - 1
+  end do
+end function    
+
+subroutine Printboard(board)
+  logical, intent(in) :: board(:,:)
+  character(n*4+1) :: line
+  integer :: f, r
+
+  write(*, "(a, i0)") "n = ", n
+  line = repeat("+---", n) // "+"
+  do r = 1, n
+    write(*, "(a)") line
+    do f = 1, n
+      write(*, "(a)", advance="no") "|"
+      if(board(f, r)) then
+        write(*, "(a)", advance="no") " Q "
+      else if(mod(f+r, 2) == 0) then
+        write(*, "(a)", advance="no") "   "
+      else
+        write(*, "(a)", advance="no") "###"
+      end if
+    end do
+    write(*, "(a)") "|"
+  end do
+  write(*, "(a)") line
+end subroutine
+end program
+
+Output: for 8, 16 and 32 queens
+n = 8
++---+---+---+---+---+---+---+---+
+| Q |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+
+|###|   |###|   | Q |   |###|   |
++---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   | Q |
++---+---+---+---+---+---+---+---+
+|###|   |###|   |###| Q |###|   |
++---+---+---+---+---+---+---+---+
+|   |###| Q |###|   |###|   |###|
++---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   | Q |   |
++---+---+---+---+---+---+---+---+
+|   | Q |   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+
+|###|   |###| Q |###|   |###|   |
++---+---+---+---+---+---+---+---+
+
+n = 16
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+
+n = 32
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   | Q |   |###|   |###|   |###|   |###|   |###|   |###|
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###|   |###| Q |###|   |###|   |###|   |###|   |###|   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+Alternate Fortran 77 solution
+C This one implements depth-first backtracking.
+C See the 2nd program for Scheme on the "Permutations" page for the
+C main idea.
+C As is, the program only prints the number of n-queens configurations.
+C To print also the configurations, uncomment the line after label 80.
+      program queens
+      implicit integer(a-z)
+      parameter(l=18)
+      dimension a(l),s(l),u(4*l-2)
+      do 10 i=1,l
+   10 a(i)=i
+      do 20 i=1,4*l-2
+   20 u(i)=0
+      do 110 n=1,l
+      m=0
+      i=1
+      r=2*n-1
+      go to 40
+   30 s(i)=j
+      u(p)=1
+      u(q+r)=1
+      i=i+1
+   40 if(i.gt.n) go to 80
+      j=i
+   50 z=a(i)
+      y=a(j)
+      p=i-y+n
+      q=i+y-1
+      a(i)=y
+      a(j)=z
+      if((u(p).eq.0).and.(u(q+r).eq.0)) goto 30
+   60 j=j+1
+      if(j.le.n) go to 50
+   70 j=j-1
+      if(j.eq.i) go to 90
+      z=a(i)
+      a(i)=a(j)
+      a(j)=z
+      go to 70
+   80 m=m+1
+C     print *,(a(k),k=1,n)
+   90 i=i-1
+      if(i.eq.0) go to 100
+      p=i-a(i)+n
+      q=i+a(i)-1
+      j=s(i)
+      u(p)=0
+      u(q+r)=0
+      go to 60
+  100 print *,n,m
+  110 continue
+      end
+
+C Output
+C          1           1
+C          2           0
+C          3           0
+C          4           2
+C          5          10
+C          6           4
+C          7          40
+C          8          92
+C          9         352
+C         10         724
+C         11        2680
+C         12       14200
+C         13       73712
+C         14      365596
+C         15     2279184
+C         16    14772512
+C         17    95815104
+C         18   666090624
+
+!The preceding program implements recursion using arrays, since Fortran 77 does not allow recursive
+!functions. The same algorithm is much easier to follow in Fortran 90, using the RECURSIVE keyword.
+!Like previously, the program only counts solutions. It's pretty straightforward to adapt it to print
+!them too: one has to replace the 'm = m + 1' instruction with a PRINT statement.
+
+function numq(n)
+    implicit none
+    integer :: i, n, m, a(n), numq
+    logical :: up(2*n - 1), down(2*n - 1)
+    do i = 1, n
+        a(i) = i
+    end do
+    up = .true.
+    down = .true.
+    m = 0
+    call sub(1)
+    numq = m
+contains
+    recursive subroutine sub(i)
+        integer :: i, j, k, p, q, s
+        do k = i, n
+            j = a(k)
+            p = i + j - 1
+            q = i - j + n
+            if(up(p) .and. down(q)) then
+                if(i == n) then
+                    m = m + 1
+                else
+                    up(p) = .false.
+                    down(q) = .false.
+                    s = a(i)
+                    a(i) = a(k)
+                    a(k) = s
+                    call sub(i + 1)
+                    up(p) = .true.
+                    down(q) = .true.
+                    s = a(i)
+                    a(i) = a(k)
+                    a(k) = s
+                end if
+            end if
+        end do
+    end subroutine
+end function
+
+program queens
+    implicit none
+    integer :: numq, n, m
+    do n = 4, 16
+        m = numq(n)
+        print *, n, m
+    end do
+end program
+
+Alternate Fortran 95 solution with OpenMP
+This code is useful mainly for counting solutions. Here we use the same algorithm as with Fortran 77,
+with an optimization: because of symmetry of the chess board, computations are divided by two.
+The remaining is parallelized with OpenMP. The loop is done on the valid combinations of queens
+in the first two columns. The original algorithm is slightly changed to start backtracking from
+column three.
+If using GCC, compile with gfortran -O2 -fopenmp queens.f90. With Absoft Pro Fortran, af90 -O2 -openmp queens.f90, and with Intel Fortran, ifort /fast /Qopenmp queens.f90.
+With some versions of GCC the function OMP_GET_WTIME is not known, which seems to be a bug. Then it's enough to comment out the two calls, and the program won't display timings.
+
+program queens
+    use omp_lib
+    implicit none
+    integer, parameter :: long = selected_int_kind(17)
+    integer, parameter :: l = 18
+    integer, parameter :: nthreads = 16    ! Change to suit your processor
+    integer :: n, i, j, a(l*l, 2), k, p, q
+    integer(long) :: s, b(l*l)
+    real(kind(1d0)) :: t1, t2
+! Edit : Added OPEN MP calls to set number of threads
+    CALL OMP_SET_DYNAMIC(.TRUE.)
+    CALL OMP_SET_NUM_THREADS(nthreads)
+    do n = 6, l
+        k = 0
+        p = n/2
+        q = mod(n, 2)*(p + 1)
+        do i = 1, n
+            do j = 1, n
+                if ((abs(i - j) > 1) .and. ((i <= p) .or. ((i == q) .and. (j < i)))) then
+                    k = k + 1
+                    a(k, 1) = i
+                    a(k, 2) = j
+                end if
+            end do
+        end do
+        s = 0
+        t1 = omp_get_wtime()
+        !$omp parallel do schedule(dynamic)
+        do i = 1, k
+            b(i) = pqueens(n, a(i, 1), a(i, 2))
+        end do
+        !$omp end parallel do
+        t2 = omp_get_wtime()
+        print "(I4, I12, F12.3)", n, 2*sum(b(1:k)), t2 - t1
+    end do
+
+contains
+    function pqueens(n, k1, k2) result(m)
+        implicit none
+        integer(long) :: m
+        integer, intent(in) :: n, k1, k2
+        integer, parameter :: l = 20
+        integer :: a(l), s(l), u(4*l - 2)
+        integer :: i, j, y, z, p, q, r
+
+        do i = 1, n
+            a(i) = i
+        end do
+
+        do i = 1, 4*n - 2
+            u(i) = 0
+        end do
+
+        m = 0
+        r = 2*n - 1
+        if (k1 == k2) return
+
+        p = 1 - k1 + n
+        q = 1 + k1 - 1
+        if ((u(p) /= 0) .or. (u(q + r) /= 0)) return
+
+        u(p) = 1
+        u(q + r) = 1
+        z = a(1)
+        a(1) = a(k1)
+        a(k1) = z
+        p = 2 - k2 + n
+        q = 2 + k2 - 1
+        if ((u(p) /= 0) .or. (u(q + r) /= 0)) return
+
+        u(p) = 1
+        u(q + r) = 1
+        if (k2 /= 1) then
+            z = a(2)
+            a(2) = a(k2)
+            a(k2) = z
+        else
+            z = a(2)
+            a(2) = a(k1)
+            a(k1) = z
+        end if
+        i = 3
+        go to 40
+
+     30 s(i) = j
+        u(p) = 1
+        u(q + r) = 1
+        i = i + 1
+     40 if (i > n) go to 80
+
+        j = i
+
+     50 z = a(i)
+        y = a(j)
+        p = i - y + n
+        q = i + y - 1
+        a(i) = y
+        a(j) = z
+        if ((u(p) == 0) .and. (u(q + r) == 0)) go to 30
+
+     60 j = j + 1
+        if (j <= n) go to 50
+
+     70 j = j - 1
+        if (j == i) go to 90
+
+        z = a(i)
+        a(i) = a(j)
+        a(j) = z
+        go to 70
+
+        !valid queens position found
+     80 m = m + 1
+
+     90 i = i - 1
+        if (i == 2) return
+
+        p = i - a(i) + n
+        q = i + a(i) - 1
+        j = s(i)
+        u(p) = 0
+        u(q + r) = 0
+        go to 60
+    end function
+end program
+
+Fortran 2008 in a Lisp-like fashion
+Works with: Fortran version 2008 and later
+The following program solves, stores, and prints all solutions to the n-queens problem, for board sizes given on the command line. To compile it, you need my modules that employ Fortran 2008’s type polymorphism to support Lisp-like CONS-pairs. The modules (and this program) are available at https://sourceforge.net/p/chemoelectric/fortran-modules along with a GNU makefile, all under a permissive free software license. The makefile is written for GNU Fortran; compiler version 11.2.1 works. The programming style is essentially functional programming, and solutions are stored as a linked list of linked lists. One might notice how circular lists are used within the code to overcome Fortran’s limited ability to do closures.
+Part of the intent here is to show that Fortran can do quite a few things people would not think it could, if it is given adequate library support.
+
+program example__n_queens
+
+  use, intrinsic :: iso_fortran_env, only: output_unit
+
+  use, non_intrinsic :: garbage_collector
+  use, non_intrinsic :: cons_pairs
+
+  implicit none
+
+  ! .true. is good for testing that necessary values are rooted.
+  ! .false. to collect garbage only when the heap reaches a limit.
+  logical :: aggressive_garbage_collection = .true.
+
+  integer :: arg_count
+  integer :: stat
+  character(80) :: arg
+
+  type(gcroot_t) :: board_sizes
+
+  arg_count = command_argument_count ()
+  if (arg_count < 1) then
+     call print_usage (output_unit)
+  else
+     board_sizes = nil
+     block
+       integer :: i
+       integer :: board_size
+       do i = 1, arg_count
+          call get_command_argument (i, arg)
+          read (arg, *, iostat = stat) board_size
+          if (stat /= 0 .or. board_size < 1) then
+             board_size = -1
+          end if
+          board_sizes = cons (board_size, board_sizes)
+       end do
+       board_sizes = reversex (board_sizes)
+     end block
+
+     if (is_member (int_eq, -1, board_sizes)) then
+        call print_usage (output_unit)
+     else
+        ! Use pair_for_each as a way to distinguish the last
+        ! BOARD_SIZE from the others. The last entry will be the final
+        ! pair, and so its CDR will *not* be a pair.
+        call pair_for_each (find_and_print_all_solutions, &
+             &              circular_list (output_unit), &
+             &              board_sizes)
+     end if
+  end if
+
+contains
+
+  subroutine print_usage (outp)
+    integer, intent(in) :: outp
+
+    write (outp, '("Usage: example__n_queens BOARD_SIZE [BOARD_SIZE...]")')
+    write (outp, '("Each BOARD_SIZE must be at least 1.")')
+    write (outp, '("For each BOARD_SIZE, all solutions are computed before any is printed.")')
+  end subroutine print_usage
+
+  subroutine find_and_print_all_solutions (outp_pair, board_sizes)
+    class(*), intent(in) :: outp_pair
+    class(*), intent(in) :: board_sizes
+
+    integer :: n_outp
+    type(gcroot_t) :: all_solutions
+
+    n_outp = int_cast (car (outp_pair))
+
+    all_solutions = find_all_solutions (car (board_sizes))
+    call check_garbage
+    call print_all_solutions (n_outp, car (board_sizes), all_solutions)
+    call check_garbage
+    if (is_pair (cdr (board_sizes))) then
+       ! Space between one BOARD_SIZE and another.
+       write (n_outp, '()')
+    end if
+  end subroutine find_and_print_all_solutions
+
+  function find_all_solutions (board_size) result (all_solutions)
+    class(*), intent(in) :: board_size
+    type(cons_t) :: all_solutions
+
+    class(*), allocatable :: solutions
+
+    call find_solutions_from_ranks_so_far (board_size, nil, solutions)
+    all_solutions = solutions
+  end function find_all_solutions
+
+  recursive subroutine find_solutions_from_ranks_so_far (board_size, ranks_so_far, solutions)
+    class(*), intent(in) :: board_size
+    class(*), intent(in) :: ranks_so_far
+    class(*), allocatable, intent(out) :: solutions
+
+    type(cons_t) :: ranks
+
+    if (length (ranks_so_far) == int_cast (board_size)) then
+       solutions = list (ranks_so_far)
+    else
+       ranks = find_legal_ranks_for_file (int_cast (board_size), ranks_so_far)
+       solutions = concatenatex (map (find_solutions_from_ranks_so_far,                  &
+            &                         circular_list (board_size),                        &
+            &                         map (kons, ranks, circular_list (ranks_so_far))))
+    end if
+  end subroutine find_solutions_from_ranks_so_far
+
+  function find_legal_ranks_for_file (board_size, ranks_so_far) result (ranks)
+    !
+    ! Return a list of all the ranks in the next file, under the
+    ! constraint that a queen placed in the position not be under
+    ! attack.
+    !
+    integer, intent(in) :: board_size
+    class(*), intent(in) :: ranks_so_far
+    type(cons_t) :: ranks
+
+    ranks = iota (board_size, 1) ! All the possible ranks.
+    ranks = remove_illegal_ranks (ranks, ranks_so_far)
+  end function find_legal_ranks_for_file
+
+  function remove_illegal_ranks (new_ranks, ranks_so_far) result (legal_ranks)
+    class(*), intent(in) :: new_ranks
+    class(*), intent(in) :: ranks_so_far
+    type(cons_t) :: legal_ranks
+
+    legal_ranks = filter_map (keep_legal_rank, new_ranks, &
+         &                    circular_list (ranks_so_far))
+  end function remove_illegal_ranks
+
+  subroutine keep_legal_rank (rank, ranks_so_far, retval)
+    class(*), intent(in) :: rank
+    class(*), intent(in) :: ranks_so_far
+    class(*), allocatable, intent(out) :: retval
+
+    if (rank_is_legal (rank, ranks_so_far)) then
+       retval = rank
+    else
+       retval = .false.
+    end if
+  end subroutine keep_legal_rank
+
+  function rank_is_legal (new_rank, ranks_so_far) result (bool)
+    class(*), intent(in) :: new_rank
+    class(*), intent(in) :: ranks_so_far
+    logical :: bool
+
+    integer :: new_file
+    type(cons_t) :: files_so_far
+
+    new_file = int (length (ranks_so_far)) + 1
+    files_so_far = iota (new_file - 1, new_file - 1, -1)
+    bool = every (these_two_queens_are_nonattacking, &
+         &        circular_list (new_file),          &
+         &        circular_list (new_rank),          &
+         &        files_so_far,                      &
+         &        ranks_so_far)
+  end function rank_is_legal
+
+  function these_two_queens_are_nonattacking (file1, rank1, file2, rank2) result (bool)
+    class(*), intent(in) :: file1, rank1
+    class(*), intent(in) :: file2, rank2
+    logical :: bool
+
+    integer :: f1, r1
+    integer :: f2, r2
+
+    ! The rank and the two diagonals must not be the same. (The files
+    ! are known to be different.)
+
+    f1 = int_cast (file1)
+    r1 = int_cast (rank1)
+    f2 = int_cast (file2)
+    r2 = int_cast (rank2)
+
+    bool = (r1 /= r2 .and. r1 + f1 /= r2 + f2 .and. r1 - f1 /= r2 - f2)
+  end function these_two_queens_are_nonattacking
+
+  subroutine print_all_solutions (outp, board_size, all_solutions)
+    class(*), intent(in) :: outp
+    class(*), intent(in) :: board_size
+    class(*), intent(in) :: all_solutions
+
+    integer(size_kind) :: n
+
+    n = length (all_solutions)
+    write (int_cast (outp), '("For a board ", I0, " by ", I0, ", ")', advance = 'no') &
+         &    int_cast (board_size), int_cast (board_size)
+    if (n == 1) then
+       write (int_cast (outp), '("there is ", I0, " solution.")') n
+    else
+       write (int_cast (outp), '("there are ", I0, " solutions.")') n
+    end if
+    call for_each (print_spaced_solution, circular_list (outp), &
+         &         circular_list (board_size), all_solutions)
+  end subroutine print_all_solutions
+
+  subroutine print_spaced_solution (outp, board_size, solution)
+    class(*), intent(in) :: outp
+    class(*), intent(in) :: board_size
+    class(*), intent(in) :: solution
+
+    write (int_cast (outp), '()', advance = 'yes')
+    call print_solution (outp, board_size, solution)
+  end subroutine print_spaced_solution
+
+  subroutine print_solution (outp, board_size, solution)
+    class(*), intent(in) :: outp
+    class(*), intent(in) :: board_size
+    class(*), intent(in) :: solution
+
+    integer :: n_outp
+    integer :: n_board_size
+    integer :: rank
+    integer :: file
+    integer :: file_of_queen
+
+    n_outp = int_cast (outp)
+    n_board_size = int_cast (board_size)
+
+    do rank = n_board_size, 1, -1
+       do file = 1, n_board_size
+          write (n_outp, '("----")', advance = 'no')
+       end do
+       write (n_outp, '("-")', advance = 'yes')
+
+       file_of_queen = n_board_size - int (list_index0 (int_eq, circular_list (rank), solution))
+
+       do file = 1, n_board_size
+          if (file == file_of_queen) then
+             write (n_outp, '("| Q ")', advance = 'no')
+          else
+             write (n_outp, '("|   ")', advance = 'no')
+          end if
+       end do
+       write (n_outp, '("|")', advance = 'yes')       
+    end do
+
+    do file = 1, n_board_size
+       write (n_outp, '("----")', advance = 'no')
+    end do
+    write (n_outp, '("-")', advance = 'yes')
+  end subroutine print_solution
+
+  subroutine kons (x, y, xy)
+    class(*), intent(in) :: x
+    class(*), intent(in) :: y
+    class(*), allocatable, intent(out) :: xy
+
+    xy = cons (x, y)
+  end subroutine kons
+
+  pure function int_cast (x) result (val)
+    class(*), intent(in) :: x
+    integer :: val
+
+    select type (x)
+    type is (integer)
+       val = x
+    class default
+       error stop
+    end select
+  end function int_cast
+
+  pure function int_eq (x, y) result (bool)
+    class(*), intent(in) :: x
+    class(*), intent(in) :: y
+    logical :: bool
+
+    bool = (int_cast (x) == int_cast (y))
+  end function int_eq
+
+  subroutine check_garbage
+    if (aggressive_garbage_collection) then
+       call collect_garbage_now
+    else
+       call check_heap_size
+    end if
+  end subroutine check_garbage
+
+end program example__n_queens
+
+Output:$ ./example__n_queens 1 2 3 4
+For a board 1 by 1, there is 1 solution.
+
+-----
+| Q |
+-----
+
+For a board 2 by 2, there are 0 solutions.
+
+For a board 3 by 3, there are 0 solutions.
+
+For a board 4 by 4, there are 2 solutions.
+
+-----------------
+|   | Q |   |   |
+-----------------
+|   |   |   | Q |
+-----------------
+| Q |   |   |   |
+-----------------
+|   |   | Q |   |
+-----------------
+
+-----------------
+|   |   | Q |   |
+-----------------
+| Q |   |   |   |
+-----------------
+|   |   |   | Q |
+-----------------
+|   | Q |   |   |
+-----------------
+
+
+
