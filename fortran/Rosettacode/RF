@@ -1,5 +1,4 @@
-#!/usr/local/bin/perl
-use v5.36;
+#!/usr/bin/perl
 
 my $task = shift || die;
 $task =~ s/.f90//;
