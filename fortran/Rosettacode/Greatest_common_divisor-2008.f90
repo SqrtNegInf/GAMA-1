@@ -11,7 +11,7 @@
 program test_gcd
   implicit none
 
-! by re-arranging, don't need to dup interface info. (older 'gfortran' doesn't like this)
+! by re-arranging, don't need to dup interface info. (but 'gfortran' fails with this setup)
 ! interface
 !    elemental function gcd (u, v) result (d)
 !      integer, intent(in) :: u, v
