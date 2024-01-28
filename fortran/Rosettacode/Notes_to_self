@@ -1,3 +1,5 @@
+Making a point of trying with both 'gfortran' and 'flang', checking for ability to compile, runtime agreement.
+
 Older gfortran doesn't deal with '%' in file names well.
 
 Some non-RC code
