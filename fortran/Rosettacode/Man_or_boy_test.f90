@@ -3,8 +3,9 @@
 !c# 2024-01-28 
 
 ! Fortran 2008 (uses an internal procedure as function argument). Tested with g95 and gfortran 4.6.
-! does not work with 'flang', compiles but seg.faults
-! with 'gfortran': only runs up to '16' before crashing (depth of recursion?)
+! with 'flang':    only runs up to  '3' before crashin
+! with 'gfortran': only runs up to '16' before crashing 
+! depth of recursion?
 
 module man_or_boy
 
@@ -61,7 +62,7 @@ program test
   use man_or_boy
   implicit none
   integer i         ! cannot be named 'a', conflicts with function name
-  do i=10,16
+  do i=1,16
       write (*,*) A(i,one,minus_one,minus_one,one,zero)
   end do
 end program test
