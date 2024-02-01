@@ -1,7 +1,8 @@
 !   Fortran
 !u# https://rosettacode.org/wiki/Semordnilap
 !c# 2024-01-04 
-! slow with full word list [hard-coded]
+! very slow with full word list [hard-coded]
+! performance particularly bad with 'flang'
 
 program Semordnilap
   implicit none
