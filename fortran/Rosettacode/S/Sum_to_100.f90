@@ -57,11 +57,9 @@ program sumto100
     print *, 'Show the lowest positive number that can''t be expressed'
     print *
     loop: do i = 0,123456789
- 999    continue
         do j = 0,nexpr-1
             if ( i .eq. ievaluate(j) ) then
-               !cycle loop
-                goto 999
+                cycle loop
             endif
         enddo
         exit
