@@ -38,6 +38,7 @@ contains
       ! find how many characters to use for integers
       write(biggest,'(i0)')ceiling(log10(real(maxval(abs(arr)))))+2
       ! use this format to write a row
+     !biggest='("  [",*(i'//trim(biggest)//'","))'   ! leaves trailing comma
       biggest='("  [",*(i'//trim(biggest)//':,","))'
       ! print one row of array at a time
       do i=1,size(arr,dim=1)
