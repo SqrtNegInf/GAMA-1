@@ -2,13 +2,15 @@
 !u# https://rosettacode.org/wiki/Anonymous_recursion
 !c# 2024-02-07 
 
-! only sort-of anon then...
 ! Since a hidden named function instead of an anonymous one seems to be ok with implementors, here is the Fortran version:
+
+! only sort-of anon then...
+! 'gfortran' doesn't like this (old or new versions)
 
 program fibo
 implicit none
 
-print *, fib(5)
+print *, fib(10)
 
 contains
 
