@@ -2,4 +2,4 @@ Making a point of trying with both 'gfortran' and 'flang', checking for ability 
 
 Older gfortran doesn't deal with '%' in file names well.
 
-Some non-RC code
+Some non-RC code (e.g. 'fortran-lang.org' examples)

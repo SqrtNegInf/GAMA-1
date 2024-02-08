@@ -32,8 +32,10 @@ die "No text!" if $fortran =~ /currently no text/i;
 
 $fortran =~ s/^Fortran\s*\[edit\]//;
 $fortran =~ s/\xA0//g;
-$fortran =~ s/FortranÂ/Fortran /g;
+#$fortran =~ s/FortranÂ/Fortran/g;
+$fortran =~ s/\bFortran//;
 $fortran =~ s/\n\s+\n/\n\n/g;
+$fortran =~ s/\t/    /g;
 
 my $ymd = `date +%Y-%m-%d`; chomp $ymd;
 my $ym  = `date +%Y.%m`; chomp $ym;
