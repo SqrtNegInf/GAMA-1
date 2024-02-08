@@ -13,6 +13,6 @@ character(len=*),parameter   :: fmt=&
     write(*,fmt) "int32  ", bit_size(0_int32),  kind(0_int32)
     write(*,fmt) "int64  ", bit_size(0_int64),  kind(0_int64)
 
-    write(*,'(a,*(i0:,", "))') "The available kinds are ",integer_kinds
+    write(*,'(a,*(i0:,", "))') "The available kinds are ",integer_kinds ! idiom to prevent trailing comma
 
 end program demo_bit_size
