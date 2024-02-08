@@ -1,4 +1,5 @@
 ! not compiling on Mac-Pro, 'printi' at issue
+! (OK with newer 'gfortran')
 
 program demo_sum
 implicit none
