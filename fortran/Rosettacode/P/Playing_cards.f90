@@ -19,7 +19,9 @@ IMPLICIT NONE
 
   CHARACTER(5) :: pip(13) = (/"Two  ", "Three", "Four ", "Five ", "Six  ", "Seven", "Eight", "Nine ", "Ten  ", &
                               "Jack ", "Queen", "King ", "Ace  "/)
-  CHARACTER(8) :: suits(4) = (/"Clubs   ", "Diamonds", "Hearts  ", "Spades  "/)
+! CHARACTER(8)     :: suits(4) = (/"Clubs   ", "Diamonds", "Hearts  ", "Spades  "/)
+  character(len=8) :: suits(4) = (/"Clubs", "Diamonds", "Hearts", "Spades"/)            ! older 'gfortran' doesn't like?
+
   INTEGER :: i, j, n, rand, dealt = 0
   REAL :: x
 
