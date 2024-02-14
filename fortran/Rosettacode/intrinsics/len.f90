@@ -1,7 +1,7 @@
 program demo_len
 implicit none
 
-! string%len ?
+! mixed results for 'many_strings' and 'string%len' (gfortran/flang, Mac-Pro/iMac)
 
 ! fixed length
 character(len=40) :: string
@@ -35,8 +35,8 @@ integer :: ii
   ! a scalar is returned for an array, as all values in a Fortran
   ! character array must be of the same length.
 ! flang: not yet implemented: gather rhs LEN parameters in assignment to allocatable
-!  many_strings = [ character(len=7) :: 'Tom', 'Dick', 'Harry' ]
-!  write(*,*)'length of ALL elements of array=',len(many_strings)
+   many_strings = [ character(len=7) :: 'Tom', 'Dick', 'Harry' ]
+   write(*,*)'length of ALL elements of array=',len(many_strings)
 
   ! NAME%LEN IS ESSENTIALLY THE SAME AS LEN(NAME)
   ! you can also query the length (and other attributes) of a string

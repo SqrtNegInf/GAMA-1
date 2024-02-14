@@ -1,4 +1,4 @@
-! version on Web site (fortran-lang.org)
+! version that doesn't rely on F2003 feature
 ! the compiler option '-fno-realloc-lhs' forces a seg.fault at run-time
 
 program demo_reshape
@@ -15,7 +15,11 @@ integer :: rc(2)
     call printi('reshaped ',reshape(box,[4,3]))
 
    ! fill in row column order using order
-    v=reshape([1,2,3,4,10,20,30,40,100,200,300,400],[1,12])         ! relies on F2003 feature, automatic alloc/re-alloc
+!   v=reshape([1,2,3,4,10,20,30,40,100,200,300,400],[1,12])         ! relies on F2003 feature, automatic allocation
+    allocate(v(1,12), source=0)
+    v(:,:)=reshape([1,2,3,4,10,20,30,40,100,200,300,400],[1,12])    ! this syntax forces failure unless 'v' is allocated
+   !v(1,:) = [1,2,3,4,10,20,30,40,100,200,300,400]                  ! also works
+
     call printi('here is some data to shape',v)
     call printi('normally fills columns first ',reshape([v],[3,4]))
     call printi('fill rows first', reshape([v],[3,4],order=[2,1]))
@@ -27,13 +31,13 @@ integer :: rc(2)
     ! transpose it.
     rc(2:1:-1)=shape(box)
     ! copy the data in changing column number fastest
-    v=reshape(box,rc,order=[2,1])
+    v=reshape(box,rc,order=[2,1])                                   ! this doesn't change storage requirements
     call printi('reshaped and reordered',v)
     ! of course we could have just done a transpose
     call printi('transposed',transpose(box))
 
    ! making the result bigger than source using pad
-    v=reshape(box,rc*2,pad=[-1,-2,-3],order=[2,1])
+    v=reshape(box,rc*2,pad=[-1,-2,-3],order=[2,1])                  ! further re-alloc is OK
     call printi('bigger and padded and reordered',v)
 contains
 
