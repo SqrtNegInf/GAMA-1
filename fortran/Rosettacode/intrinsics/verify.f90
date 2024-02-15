@@ -64,7 +64,7 @@ integer :: i
    ! are strings all letters (or blanks)?
    write(*,*) 'array of strings',verify( &
    ! strings must all be same length, so force to length 10
-   & [character(len=10) :: "YES","ok","000","good one","Nope!"], &
+   & [character(len=10) :: "YES","ok","000","good one","Nope!"], & ! 'gfortran' OK  [cf. 'P/Playing_cards']
    & low//upp//blank) == 0
 
    ! rarer, but the set can be an array, not just the strings to test
