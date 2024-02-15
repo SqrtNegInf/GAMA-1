@@ -2,7 +2,8 @@
 !u# https://rosettacode.org/wiki/Catamorphism
 !c# 2024-02-06 
 
-! 'gfortan' fails: Internal compiler error: Error reporting routines re-entered.
+! older 'gfortan' fails: Internal compiler error: Error reporting routines re-entered.
+! (even after clearing issue with multi-line with 1st write statement)
 
 program CBD
     implicit none
@@ -18,7 +19,7 @@ program CBD
                                           Date(8,14,.true.), Date(8,15,.true.), Date(8,17,.true.)]
     integer, parameter :: UPPER_BOUND = size(dates)
 write(*,*) 'possible dates: [[May 15] [May 16] [May 19] [June 17] [June 18] [July 14] [July 16] [August 14] [August 15] [August &
-    17]]'
+   &17]]'
 write(*,*)
 write(*,*) '(1) Albert: I don''t know when Cheryl''s birthday is, but I know that Bernard does not know too.'
 write(*,*) '    -> meaning: the month cannot have a unique day'
