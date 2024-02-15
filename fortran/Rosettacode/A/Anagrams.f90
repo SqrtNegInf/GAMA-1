@@ -9,8 +9,8 @@
 
     !the dictionary file:
     integer,parameter :: file_unit = 1000
-!   character(len=*),parameter :: filename = 'anagram.txt'
-    character(len=*),parameter :: filename = 'unixdict.txt'
+    character(len=*),parameter :: filename = 'anagram.txt'
+!   character(len=*),parameter :: filename = 'unixdict.txt' !  slooooooow
 
     !maximum number of characters in a word:
     integer,parameter :: max_chars = 50
@@ -27,7 +27,7 @@
     end type word
 
     !the dictionary structure:
-    type(word),dimension(:),allocatable,target :: dict
+    type(word),dimension(:),allocatable,target :: dict           ! 'target' required!
 
     contains
 !***************************************************************************************
