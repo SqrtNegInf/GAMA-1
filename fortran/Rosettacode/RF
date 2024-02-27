@@ -7,6 +7,7 @@ $task =~ s/.f90//;
 #exec "flang-new-mp-17 -Werror                   -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
 
 #__END__
-system "gfortran -Wall -Wextra -Wno-uninitialized -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
-print "======================\n";
-system "flang-new-mp-17 -Werror                   -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+#system "gfortran -Wall -Wextra -Wno-uninitialized -fno-realloc-lhs -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+system "gfortran -Wall -Wextra -Wno-uninitialized -fopenmp -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
+print ">=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=<\n";
+system "flang-new-mp-17 -Werror                   -fopenmp -l lapack -o $task $task.f90; ./$task; rm -f ./$task *.mod";
