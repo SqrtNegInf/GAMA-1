@@ -19,8 +19,9 @@ IMPLICIT NONE
 
   CHARACTER(5) :: pip(13) = (/"Two  ", "Three", "Four ", "Five ", "Six  ", "Seven", "Eight", "Nine ", "Ten  ", &
                               "Jack ", "Queen", "King ", "Ace  "/)
-! CHARACTER(8)     :: suits(4) = (/"Clubs   ", "Diamonds", "Hearts  ", "Spades  "/)
-  character(len=8) :: suits(4) = (/"Clubs", "Diamonds", "Hearts", "Spades"/)            ! older 'gfortran' doesn't like?
+! CHARACTER(8) :: suits(4) = (/"Clubs   ", "Diamonds", "Hearts  ", "Spades  "/)         ! orginal, requires padding with blanks
+! character(8) :: suits(4) = [ "Clubs", "Diamonds", "Hearts", "Spades" ]                ! 'gfortran' doesn't like
+  character(8) :: suits(4) = [character(8) :: "Clubs", "Diamonds", "Hearts", "Spades"]  ! OK
 
   INTEGER :: i, j, n, rand, dealt = 0
   REAL :: x
