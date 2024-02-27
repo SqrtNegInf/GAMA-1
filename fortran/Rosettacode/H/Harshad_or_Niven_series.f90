@@ -6,7 +6,8 @@ program Harshad
   integer :: i, h = 0
   do i=1, 20
     call nextHarshad(h)
-    write(6, '(i5)', advance='no') h
+    write(6, '(i5$)') h
+   !write(6, '(i5)', advance='no') h
   enddo
   h = 1000
   call nextHarshad(h)
