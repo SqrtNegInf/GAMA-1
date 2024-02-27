@@ -50,12 +50,12 @@ contains
 
   logical function HermitianQ(a)
     complex, dimension(:,:), intent(in) :: a
-    HermitianQ = all(a .eq. ct(a))
+    HermitianQ = all( abs ( a - ct(a) ) < epsilon(1.0) )
   end function HermitianQ
 
   logical function NormalQ(a)
     complex, dimension(:,:), intent(in) :: a
-    NormalQ = all(matmul(ct(a),a) .eq. matmul(a,ct(a)))
+    NormalQ = all( abs (matmul(ct(a),a) - matmul(a,ct(a))) < epsilon(1.0) )
   end function NormalQ
 
   logical function UnitaryQ(a)
@@ -63,7 +63,7 @@ contains
     ! then multiplying each side by A should result in the identity matrix
     ! Thus show that  A times A star  is sufficiently close to  I .
     complex, dimension(:,:), intent(in) :: a
-    UnitaryQ = all(abs(matmul(a,ct(a)) - identity(size(a,1))) .lt. 1e-6)
+    UnitaryQ = all(abs(matmul(a,ct(a)) - identity(size(a,1))) .lt. 1e-6)        ! not 'epsilon' here
   end function UnitaryQ
 
 end program conjugate_transpose
