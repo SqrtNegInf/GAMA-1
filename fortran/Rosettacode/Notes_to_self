@@ -1,3 +1,5 @@
+The compiler option '-fno-realloc-lhs' forces a seg.fault at run-time for lots/most/all of 'allocate' tasks?
+
 Making a point of trying with both 'gfortran' and 'flang', checking for ability to compile, runtime agreement.
 
 Older gfortran doesn't deal with '%' in file names well.
